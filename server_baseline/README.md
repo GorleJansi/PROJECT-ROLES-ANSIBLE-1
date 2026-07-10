@@ -1,38 +1,117 @@
-Role Name
-=========
+# Server Baseline Ansible Role
 
-A brief description of the role goes here.
+This project contains an Ansible role named `server_baseline`.
 
-Requirements
-------------
+The purpose of this role is to configure a fresh Linux server with basic settings that are commonly used in daily DevOps work.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## What This Role Does
 
-Role Variables
---------------
+The `server_baseline` role performs these actions:
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- Installs common packages such as `git`, `curl`, `vim`, `htop`, and `net-tools`
+- Creates Linux users from variables
+- Adds sudo access for the baseline users using a template
+- Updates SSH security settings
+- Restarts SSH only when SSH configuration changes
+- Creates a login message using `/etc/motd`
 
-Dependencies
-------------
+## Role Structure
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+```text
+server_baseline/
+  tasks/main.yml
+  vars/main.yml
+  handlers/main.yml
+  templates/sudoers.j2
+  templates/motd.j2
+  main_playbook.yaml
+```
 
-Example Playbook
-----------------
+## Important Files
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+`tasks/main.yml`
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+Contains the main automation steps such as package installation, user creation, sudoers configuration, SSH hardening, and MOTD setup.
 
-License
--------
+`vars/main.yml`
 
-BSD
+Stores variables such as package names, user details, and the login message.
 
-Author Information
-------------------
+`handlers/main.yml`
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Contains the SSH restart handler. The handler runs only when notified by a changed SSH configuration task.
+
+`templates/sudoers.j2`
+
+Creates sudo access rules for the users defined in variables.
+
+`templates/motd.j2`
+
+Creates the server login message from the `motd_message` variable.
+
+## Variables Used
+
+Example package variable:
+
+```yaml
+baseline_packages:
+  - git
+  - curl
+  - vim
+  - htop
+  - net-tools
+```
+
+Example user variable:
+
+```yaml
+baseline_users:
+  - name: devops
+    shell: /bin/bash
+    groups: sudo
+```
+
+Example MOTD variable:
+
+```yaml
+motd_message: |
+  This server is managed by Ansible.
+  Unauthorized access is prohibited.
+```
+
+## Example Playbook
+
+```yaml
+- name: Apply server baseline
+  hosts: man
+  become: yes
+  roles:
+    - server_baseline
+```
+
+## How To Run
+
+From the project directory, first run a syntax check:
+
+```bash
+ansible-playbook -i inventory.ini server_baseline/main_playbook.yaml --syntax-check
+```
+
+Then run the playbook:
+
+```bash
+ansible-playbook -i inventory.ini server_baseline/main_playbook.yaml
+```
+
+## Interview Points
+
+This role is useful for interview practice because it covers:
+
+- Roles
+- Variables
+- Loops
+- Templates
+- Handlers
+- Idempotency
+- Sudoers safety
+- SSH hardening
