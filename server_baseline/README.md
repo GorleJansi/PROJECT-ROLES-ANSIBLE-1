@@ -68,7 +68,7 @@ Example user variable:
 baseline_users:
   - name: devops
     shell: /bin/bash
-    groups: sudo
+    groups: wheel
 ```
 
 Example MOTD variable:

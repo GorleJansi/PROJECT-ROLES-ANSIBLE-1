@@ -8,10 +8,10 @@ baseline_packages:
 baseline_users:
   - name: devops
     shell: /bin/bash
-    groups: sudo
+    groups: wheel
   - name: deploy
     shell: /bin/bash
-    groups: sudo
+    groups: wheel
 
 motd_message: |
   This server is managed by Ansible.
