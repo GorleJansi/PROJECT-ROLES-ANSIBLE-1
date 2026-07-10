@@ -12,7 +12,7 @@
     groups: '{{ item.groups }}'
     append: yes
     state: present  
-  loop: '{{ users }}'
+  loop: '{{ baseline_users }}'
 
 - name: Configure sudo access for baseline users
   ansible.builtin.template:
