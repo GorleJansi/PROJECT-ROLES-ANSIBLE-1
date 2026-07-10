@@ -15,16 +15,18 @@ The `server_baseline` role performs these actions:
 - Restarts SSH only when SSH configuration changes
 - Creates a login message using `/etc/motd`
 
-## Role Structure
+## Project Structure
 
 ```text
+ansible.cfg
+inventory.ini
+main_playbook.yaml
 server_baseline/
   tasks/main.yml
   vars/main.yml
   handlers/main.yml
   templates/sudoers.j2
   templates/motd.j2
-  main_playbook.yaml
 ```
 
 ## Important Files
@@ -56,7 +58,7 @@ Example package variable:
 ```yaml
 baseline_packages:
   - git
-  - curl
+  - curl-minimal
   - vim
   - htop
   - net-tools
@@ -94,13 +96,13 @@ motd_message: |
 From the project directory, first run a syntax check:
 
 ```bash
-ansible-playbook -i inventory.ini server_baseline/main_playbook.yaml --syntax-check
+ansible-playbook main_playbook.yaml --syntax-check
 ```
 
 Then run the playbook:
 
 ```bash
-ansible-playbook -i inventory.ini server_baseline/main_playbook.yaml
+ansible-playbook main_playbook.yaml
 ```
 
 ## Interview Points
