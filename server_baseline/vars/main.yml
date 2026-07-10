@@ -1,6 +1,6 @@
 baseline_packages:
   - git
-  - curl
+  - curl-minimal
   - vim
   - htop
   - net-tools
