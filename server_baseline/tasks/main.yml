@@ -1,0 +1,48 @@
+---
+- name: install common packages
+  dnf:
+    name: '{{ item }}'
+    state: present
+  loop: '{{ baseline_packages }}'
+        
+- name: create linux users 
+  user:
+    name: '{{ item.name }}'
+    shell: '{{ item.shell }}'
+    groups: '{{ item.groups }}'
+    append: yes
+    state: present  
+  loop: '{{ users }}'
+
+- name: Configure sudo access for baseline users
+  ansible.builtin.template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/devops-users
+    owner: root
+    group: root
+    mode: "0440"
+    validate: "visudo -cf %s"
+
+- name: Configure SSH PermitRootLogin
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: 'PermitRootLogin no'
+    backup: yes
+  notify: Restart ssh  
+
+- name: Configure SSH PasswordAuthentication
+  ansible.builtin.lineinfile:
+  path: /etc/ssh/sshd_config
+  regexp: "^#?PasswordAuthentication"
+  line: "PasswordAuthentication no"                    #This disables password-based SSH login.After this change, users must normally connect using SSH keys: ssh -i private-key.pem ubuntu@server-ip
+  backup: yes
+  notify: Restart ssh
+
+- name: Configure login message.                     # MOTD means Message of the Day.It is normally displayed after a user logs in    
+  ansible.builtin.template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: "0644"    

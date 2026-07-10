@@ -1,0 +1,5 @@
+- name: Apply server baseline
+  hosts: man
+  become: yes
+  roles:
+    - server_baseline

@@ -1,0 +1,18 @@
+baseline_packages:
+  - git
+  - curl
+  - vim
+  - htop
+  - net-tools
+
+baseline_users:
+  - name: devops
+    shell: /bin/bash
+    groups: sudo
+  - name: deploy
+    shell: /bin/bash
+    groups: sudo
+
+motd_message: |
+  This server is managed by Ansible.
+  Unauthorized access is prohibited.
