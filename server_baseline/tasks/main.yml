@@ -33,10 +33,10 @@
 
 - name: Configure SSH PasswordAuthentication
   ansible.builtin.lineinfile:
-  path: /etc/ssh/sshd_config
-  regexp: "^#?PasswordAuthentication"
-  line: "PasswordAuthentication no"                    #This disables password-based SSH login.After this change, users must normally connect using SSH keys: ssh -i private-key.pem ubuntu@server-ip
-  backup: yes
+    path: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"                    #This disables password-based SSH login.After this change, users must normally connect using SSH keys: ssh -i private-key.pem ubuntu@server-ip
+    backup: yes
   notify: Restart ssh
 
 - name: Configure login message.                     # MOTD means Message of the Day.It is normally displayed after a user logs in    
